@@ -110,9 +110,12 @@ ASMFLAGS += -DBSP_DEFINES_ONLY
 #default target - first one defined
 default: $(BUILD_DIRECTORIES) all
 
+.SECONDARY: all
+
 #building all targets
 all: $(OUTPUT_BINARY_DIRECTORY)/nrf51822_xxac-keyboard-left.hex  \
      $(OUTPUT_BINARY_DIRECTORY)/nrf51822_xxac-keyboard-right.hex
+
 
 C_SOURCE_FILE_NAMES = $(notdir $(C_SOURCE_FILES))
 C_PATHS = $(call remduplicates, $(dir $(C_SOURCE_FILES) ) )
@@ -129,7 +132,6 @@ OBJECTS = $(C_OBJECTS) $(ASM_OBJECTS)
 
 LINKER_SCRIPT=gzll_gcc_nrf51.ld
 
-.SECONDARY:
 
 ## Create build directories
 $(BUILD_DIRECTORIES):
