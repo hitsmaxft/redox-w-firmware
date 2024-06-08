@@ -20,6 +20,7 @@
 #define RTS_PIN_NUMBER 22
 #define HWFC           false
 
+#define REDOX_DEBUG TRUE
 
 // Define payload length
 #define PAYLOAD_LENGTH 5 ///< 5 byte payload length
@@ -124,6 +125,7 @@ int main(void)
             app_uart_put(0xE0);
 
             // debugging help, for printing keystates to a serial console
+#ifdef REDOX_DEBUG
             /*
             for (uint8_t i = 0; i < 10; i++)
             {
@@ -141,6 +143,8 @@ int main(void)
                    BYTE_TO_BINARY(data_payload_left[4]));
             nrf_delay_us(100);
             */
+
+#endif
         }
         // allowing UART buffers to clear
         nrf_delay_us(10);

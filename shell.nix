@@ -10,10 +10,13 @@ pkgs.mkShell {
   name = "nrf51-dev-environment";
 
   buildInputs = with pkgs; [
+    inetutils
     openocd
     cmake
     ninja
     python3 # The nRF tools often require Python
+    python312Packages.compiledb
+
   ];
   nativeBuildInputs = [
     gccarm
@@ -29,6 +32,7 @@ pkgs.mkShell {
     # You may need to adjust or add other environment variables here
     export PATH=$PATH:$NRF_SDK_PATH
     export GNU_INSTALL_ROOT=${gccarm}
+    echo "opencod root: ${pkgs.openocd}"
     echo "nRF51 SDK root: $SDK_ROOT"
   '';
 }

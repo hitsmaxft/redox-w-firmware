@@ -1,8 +1,7 @@
+SUBDIRS := $(patsubst %/,%,$(wildcard redox-w-*/custom/armgcc))
 
-all:
-	make -C redox-w-receiver-basic/custom/armgcc
-	make -C redox-w-keyboard-basic/custom/armgcc
+.PHONY: all $(MAKECMDGOALS) $(SUBDIRS)
+$(MAKECMDGOALS) all: $(SUBDIRS)
 
-clean:
-	make -C redox-w-receiver-basic/custom/armgcc clean
-	make -C redox-w-keyboard-basic/custom/armgcc clean
+$(SUBDIRS):
+	$(MAKE) -C $@ $(MAKECMDGOALS)
