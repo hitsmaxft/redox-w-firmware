@@ -4,6 +4,14 @@ let
   gccarm = pkgs.callPackage ./nix/gccarm6.nix {};
 
   nrf51-sdk = pkgs.callPackage ./nix/nrfsdk5.nix {};
+  run-openocd = pkgs.writeShellApplication {
+  name = "run-openocd";
+
+  runtimeInputs = [ pkgs.openocd ];
+  text = ''
+    openocd -s ${pkgs.openocd}/share/openocd/scripts  -f interface/stlink-v2.cfg -f target/nrf51.cfg
+  '';
+};
 in
 
 pkgs.mkShell {
@@ -16,7 +24,7 @@ pkgs.mkShell {
     ninja
     python3 # The nRF tools often require Python
     python312Packages.compiledb
-
+    run-openocd
   ];
   nativeBuildInputs = [
     gccarm

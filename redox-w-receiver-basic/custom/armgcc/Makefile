@@ -40,6 +40,8 @@ $(SDK_ROOT)/components/libraries/util/app_error.c \
 $(SDK_ROOT)/components/libraries/util/app_error_weak.c \
 $(SDK_ROOT)/components/libraries/fifo/app_fifo.c \
 $(SDK_ROOT)/components/libraries/util/app_util_platform.c \
+$(SDK_ROOT)/components/libraries/util/nrf_log.c \
+$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
 $(SDK_ROOT)/components/libraries/util/nrf_assert.c \
 $(SDK_ROOT)/components/libraries/uart/retarget.c \
 $(SDK_ROOT)/components/libraries/uart/app_uart_fifo.c \
@@ -72,6 +74,8 @@ INC_PATHS += -I$(SDK_ROOT)/components/libraries/fifo
 INC_PATHS += -I$(SDK_ROOT)/components/toolchain/gcc
 INC_PATHS += -I$(SDK_ROOT)/components/properitary_rf/gzll
 
+INC_PATHS += -I$(SDK_ROOT)/external/segger_rtt
+
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
 OUTPUT_BINARY_DIRECTORY = $(OBJECT_DIRECTORY)
@@ -81,6 +85,10 @@ BUILD_DIRECTORIES := $(sort $(OBJECT_DIRECTORY) $(OUTPUT_BINARY_DIRECTORY) $(LIS
 
 #flags common to all targets
 CFLAGS  = -DNRF51
+
+#enable rtt logging
+CFLAGS += -DNRF_LOG_USES_RTT=1
+
 CFLAGS += -DGAZELL_PRESENT
 CFLAGS += -DBOARD_CUSTOM
 CFLAGS += -DBSP_DEFINES_ONLY

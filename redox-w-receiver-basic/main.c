@@ -1,4 +1,6 @@
 
+#define NRF_LOG_USES_RTT 1
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -6,6 +8,7 @@
 #include "nrf_drv_uart.h"
 #include "app_error.h"
 #include "nrf_delay.h"
+#include "nrf_log.h"
 #include "nrf.h"
 #include "nrf_gzll.h"
 
@@ -60,7 +63,66 @@ void uart_error_handle(app_uart_evt_t * p_event)
 }
 
 
-int main(void)
+int mainDebug(void)
+{
+
+    uint32_t err_code;
+    const app_uart_comm_params_t comm_params =
+      {
+          RX_PIN_NUMBER,
+          TX_PIN_NUMBER,
+          RTS_PIN_NUMBER,
+          CTS_PIN_NUMBER,
+          APP_UART_FLOW_CONTROL_DISABLED,
+          false,
+          UART_BAUDRATE_BAUDRATE_Baud1M
+      };
+
+    APP_UART_FIFO_INIT(&comm_params,
+                         UART_RX_BUF_SIZE,
+                         UART_TX_BUF_SIZE,
+                         uart_error_handle,
+                         APP_IRQ_PRIORITY_LOW,
+                         err_code);
+
+    APP_ERROR_CHECK(err_code);
+
+    NRF_LOG_INIT();
+
+    NRF_LOG_ERROR("hello from nrf");
+
+    // Initialize Gazell
+    nrf_gzll_init(NRF_GZLL_MODE_HOST);
+    nrf_gzll_set_channel_table(channel_table,6);
+    nrf_gzll_set_datarate(NRF_GZLL_DATARATE_1MBIT);
+    nrf_gzll_set_timeslot_period(900);
+
+    // Addressing
+    nrf_gzll_set_base_address_0(0x01020304);
+    nrf_gzll_set_base_address_1(0x05060708);
+
+    // Enable Gazell to start sending over the air
+    nrf_gzll_enable();
+
+    uint8_t matrix[MATRIX_ROWS] = {0, 1, 2, 3, 4};
+
+    // main loop
+    while (true)
+    {
+        // checking for a poll request from QMK
+        uint8_t c;
+        if (app_uart_get(&c) == NRF_SUCCESS && c == 's')
+        {
+            // sending data to QMK, and an end byte
+            nrf_drv_uart_tx(matrix, 10);
+            app_uart_put(0xE0);
+
+        }
+        // allowing UART buffers to clear
+        nrf_delay_ms(1000);
+    }
+}
+int mainOrigin(void)
 {
     uint32_t err_code;
     const app_uart_comm_params_t comm_params =
@@ -83,7 +145,9 @@ int main(void)
 
     APP_ERROR_CHECK(err_code);
 
-    // Initialize Gazell
+
+
+    // Initialize Gazell as host
     nrf_gzll_init(NRF_GZLL_MODE_HOST);
     nrf_gzll_set_channel_table(channel_table,6);
     nrf_gzll_set_datarate(NRF_GZLL_DATARATE_1MBIT);
@@ -151,6 +215,10 @@ int main(void)
     }
 }
 
+
+int main(void) {
+    mainDebug();
+}
 
 // Callbacks not needed in this example.
 void nrf_gzll_device_tx_success(uint32_t pipe, nrf_gzll_device_tx_info_t tx_info) {}
