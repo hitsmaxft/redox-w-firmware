@@ -7,6 +7,7 @@
 #include "nrf_gzll.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
+#include "nrf_log.h"
 #include "nrf_drv_clock.h"
 #include "nrf_drv_rtc.h"
 #include "nrf51_bitfields.h"
@@ -200,6 +201,10 @@ static void rtc_config(void)
 
 int main()
 {
+
+    // init logging
+    NRF_LOG_INIT();
+
     // Initialize Gazell
     nrf_gzll_init(NRF_GZLL_MODE_DEVICE);
 

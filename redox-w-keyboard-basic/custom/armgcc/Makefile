@@ -3,6 +3,7 @@ PROJECT_NAME := redow-w-keyboard-basic
 export OUTPUT_FILENAME
 
 SDK_ROOT ?= ../../../..
+NRF_LOG ?= "0"
 
 TEMPLATE_PATH = $(SDK_ROOT)/components/toolchain/gcc
 ifeq ($(OS),Windows_NT)
@@ -66,6 +67,8 @@ INC_PATHS += -I$(SDK_ROOT)/components/libraries/util
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/config
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/rtc
 
+INC_PATHS += -I$(SDK_ROOT)/external/segger_rtt
+
 
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
@@ -85,6 +88,21 @@ CFLAGS += -Wall -Werror -O3 -g3
 CFLAGS += -Wno-unused-function
 CFLAGS += -Wno-unused-variable
 CFLAGS += -mfloat-abi=soft
+
+
+# setup debug
+ifeq ("$(NRF_LOG)","1")
+C_SOURCE_FILES += \
+	$(SDK_ROOT)/components/libraries/util/nrf_log.c \
+	$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c
+INC_PATHS += -I$(SDK_ROOT)/components/libraries/util
+CFLAGS += -DNRF_LOG_USES_RTT=1
+CFLAGS += -DNRF_LOG_ENABLED=1
+CFLAGS += -DNRF_LOG_BACKEND_RTT_ENABLED=1
+CFLAGS += -DNRF_LOG_BACKEND_UART_ENABLED=0
+endif
+
+
 # keep every function in separate section. This will allow linker to dump unused functions
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
 CFLAGS += -fno-builtin --short-enums

@@ -1,6 +1,4 @@
 
-#define NRF_LOG_USES_RTT 1
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -87,9 +85,6 @@ int mainDebug(void)
 
     APP_ERROR_CHECK(err_code);
 
-    NRF_LOG_INIT();
-
-    NRF_LOG_ERROR("hello from nrf");
 
     // Initialize Gazell
     nrf_gzll_init(NRF_GZLL_MODE_HOST);
@@ -104,7 +99,12 @@ int mainDebug(void)
     // Enable Gazell to start sending over the air
     nrf_gzll_enable();
 
-    uint8_t matrix[MATRIX_ROWS] = {0, 1, 2, 3, 4};
+    uint8_t matrix[MATRIX_ROWS] = {0};
+
+    for (int i =0 ; i < MATRIX_ROWS; i ++ ) {
+        matrix[i] = (uint8_t)i;
+    }
+
 
     // main loop
     while (true)
@@ -217,7 +217,7 @@ int mainOrigin(void)
 
 
 int main(void) {
-    mainDebug();
+    mainOrigin();
 }
 
 // Callbacks not needed in this example.

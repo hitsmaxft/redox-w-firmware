@@ -5,11 +5,11 @@ let
 
   nrf51-sdk = pkgs.callPackage ./nix/nrfsdk5.nix {};
   run-openocd = pkgs.writeShellApplication {
-  name = "run-openocd";
+  name = "openocd-nrf51-stlink";
 
   runtimeInputs = [ pkgs.openocd ];
   text = ''
-    openocd -s ${pkgs.openocd}/share/openocd/scripts  -f interface/stlink-v2.cfg -f target/nrf51.cfg
+    openocd -s ${pkgs.openocd}/share/openocd/scripts  -f interface/stlink.cfg  -f target/nrf51.cfg "${"$"}{@}"
   '';
 };
 in
