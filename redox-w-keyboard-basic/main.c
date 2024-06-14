@@ -2,6 +2,7 @@
  * Either COMPILE_RIGHT or COMPILE_LEFT has to be defined from the make call to allow proper functionality
  */
 
+#include "app_error.h"
 #include "redox-w.h"
 #include "nrf_drv_config.h"
 #include "nrf_gzll.h"
@@ -102,6 +103,7 @@ static bool compare_keys(const uint8_t* first, const uint8_t* second,
           return false;
         }
     }
+    NRF_LOG_DEBUG("key changed")
     return true;
 }
 
@@ -155,7 +157,13 @@ static void handle_send(const uint8_t* keys_buffer)
         // for DEBOUNCE ticks
         if (debounce_ticks == DEBOUNCE) {
             // Assemble packet and send to receiver
+            //
             nrf_gzll_add_packet_to_tx_fifo(PIPE_NUMBER, keys_snapshot, ROWS);
+            #ifdef DEBUG
+            for (int k = 0; k < ROWS; k++) {
+                NRF_LOG_DEBUG('row', k, ' ', keys_snapshot[k]);
+            }
+            #endif
             debounce_ticks = 0;
         }
     } else {
@@ -203,9 +211,11 @@ int main()
 {
 
     // init logging
-    NRF_LOG_INIT();
+    APP_ERROR_CHECK(NRF_LOG_INIT());
 
     // Initialize Gazell
+    NRF_LOG_DEBUG("init gazel");
+
     nrf_gzll_init(NRF_GZLL_MODE_DEVICE);
 
     // Attempt sending every packet up to 100 times
@@ -222,6 +232,8 @@ int main()
     // Enable Gazell to start sending over the air
     nrf_gzll_enable();
 
+    NRF_LOG_DEBUG("gazel enabled");
+
     // Configure 32kHz xtal oscillator
     lfclk_config();
 
@@ -231,6 +243,7 @@ int main()
     // Configure all keys as inputs with pullups
     gpio_config();
 
+    NRF_LOG_DEBUG("start mainloop");
     // Main loop, constantly sleep, waiting for RTC and gpio IRQs
     while(1)
     {

@@ -59,8 +59,8 @@ LIBS  = $(SDK_ROOT)/components/properitary_rf/gzll/gcc/gzll_gcc.a
 #includes common to all targets
 INC_PATHS += -I$(abspath ../../config)
 INC_PATHS += -I$(SDK_ROOT)/config
-INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd
 INC_PATHS += -I$(SDK_ROOT)/components/device
+INC_PATHS += -I$(SDK_ROOT)/components/softdevice/s130/headers/
 INC_PATHS += -I$(SDK_ROOT)/components/libraries/uart
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/hal
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/delay
@@ -74,6 +74,7 @@ INC_PATHS += -I$(SDK_ROOT)/components/libraries/fifo
 INC_PATHS += -I$(SDK_ROOT)/components/toolchain/gcc
 INC_PATHS += -I$(SDK_ROOT)/components/properitary_rf/gzll
 
+#INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd
 INC_PATHS += -I$(SDK_ROOT)/external/segger_rtt
 
 OBJECT_DIRECTORY = _build

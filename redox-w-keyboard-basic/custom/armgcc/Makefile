@@ -42,6 +42,7 @@ $(SDK_ROOT)/components/drivers_nrf/delay/nrf_delay.c \
 $(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c \
 $(SDK_ROOT)/components/libraries/util/app_util_platform.c \
 $(SDK_ROOT)/components/drivers_nrf/common/nrf_drv_common.c \
+$(SDK_ROOT)/components/libraries/util/app_error.c \
 $(SDK_ROOT)/components/drivers_nrf/rtc/nrf_drv_rtc.c
 
 #assembly files common to all targets
@@ -53,6 +54,7 @@ LIBS  = $(SDK_ROOT)/components/properitary_rf/gzll/gcc/gzll_gcc.a
 #includes common to all targets
 INC_PATHS  = -I$(abspath ../../config)
 INC_PATHS += -I$(SDK_ROOT)/components/device
+INC_PATHS += -I$(SDK_ROOT)/components/softdevice/s130/headers/
 INC_PATHS += -I$(SDK_ROOT)/components/toolchain/CMSIS/Include
 INC_PATHS += -I$(SDK_ROOT)/components/properitary_rf/gzll
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/hal
@@ -60,13 +62,12 @@ INC_PATHS += -I$(SDK_ROOT)/components/toolchain/gcc
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/delay
 INC_PATHS += -I$(SDK_ROOT)/examples/bsp
 INC_PATHS += -I$(SDK_ROOT)/components/toolchain
-INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/common
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/clock
 INC_PATHS += -I$(SDK_ROOT)/components/libraries/util
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/config
 INC_PATHS += -I$(SDK_ROOT)/components/drivers_nrf/rtc
-
+INC_PATHS += -I$(SDK_ROOT)/components/libraries/util
 INC_PATHS += -I$(SDK_ROOT)/external/segger_rtt
 
 
@@ -95,7 +96,6 @@ ifeq ("$(NRF_LOG)","1")
 C_SOURCE_FILES += \
 	$(SDK_ROOT)/components/libraries/util/nrf_log.c \
 	$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c
-INC_PATHS += -I$(SDK_ROOT)/components/libraries/util
 CFLAGS += -DNRF_LOG_USES_RTT=1
 CFLAGS += -DNRF_LOG_ENABLED=1
 CFLAGS += -DNRF_LOG_BACKEND_RTT_ENABLED=1
